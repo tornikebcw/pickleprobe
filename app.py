@@ -9,18 +9,24 @@ w3 = Web3(HTTPProvider("http://44.227.34.159:8008/rpc"))
 
 peer_gauge = prom.Gauge(
     'peer_count', 'Number of peers in the Ethereum network')
-current_head = prom.Gauge(
-    'current_head', 'latest block number of the blockchain')
+latest_block = prom.Counter(
+    'latest_block', 'latest block number of the blockchain')
+node_sync_gauge = prom.Gauge(
+    'syncing', 'Node Syncing Status'
+)
 
 
 def check_syncing():
     try:
         syncing = w3.eth.syncing
+
         if syncing:
-            print("block-diff:",
-                  syncing['highestBlock'] - syncing['currentBlock'])
+            diff = print("block-diff:",
+                         syncing['highestBlock'] - syncing['currentBlock'])
+            node_sync_gauge.set(diff)
         else:
             print("Node is synced")
+            node_sync_gauge.set(1)
     except Exception as err:
         print("An error occurred:", err)
 
@@ -36,8 +42,7 @@ def current_head():
 def peerCount():
     try:
         count = w3.net.peer_count
-        # set the gauge to the current peer count
-        peer_gauge.set(count)
+        # peer_gauge.set(count)
         print("Peers:", count)
     except Exception as err:
         print("Bad Shit went down:", err)
@@ -54,7 +59,7 @@ def netVersion():
         print("Bad Shit went down:", err)
 
 
-schedule.every(15).seconds.do(peerCount)
+# schedule.every(15).seconds.do(peerCount)
 
 
 # if __name__ == '__main__':
@@ -63,5 +68,4 @@ schedule.every(15).seconds.do(peerCount)
 #     while True:
 #         schedule.run_pending()
 #         time.sleep(1)
-
 check_syncing()

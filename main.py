@@ -21,6 +21,9 @@ latest_block = prom.Gauge(
 node_sync_gauge = prom.Gauge(
     'syncing', 'Node Syncing Status'
 )
+blocks_to_syn_gauge = prom.gauge(
+    'blocks_to_sync', 'Blocks node needs to catch up')
+
 bor_status_gauge = prom.Gauge(
     '{}_status'.format('bor'), 'Status of the Service', ['service_name'])
 heimdall_status_gauge = prom.Gauge(
@@ -33,11 +36,10 @@ netinfo = prom.Gauge(
 def check_syncing():
     try:
         syncing = w3.eth.syncing
-
         if syncing:
-            diff = print("block-diff:",
-                         syncing['highestBlock'] - syncing['currentBlock'])
-            node_sync_gauge.set(diff)
+            node_sync_gauge.set(0)
+            blocks_to_syn_gauge.set(
+                syncing['highestBlock'] - syncing['currentBlock'])
         else:
             print("Node is synced")
             node_sync_gauge.set(1)

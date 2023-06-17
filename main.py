@@ -12,7 +12,14 @@ prom.REGISTRY.unregister(prom.PROCESS_COLLECTOR)
 prom.REGISTRY.unregister(prom.PLATFORM_COLLECTOR)
 prom.REGISTRY.unregister(prom.GC_COLLECTOR)
 
-w3 = Web3(HTTPProvider("http://44.227.34.159:8008/rpc"))
+env = os.getenv('env')
+
+
+if env == 'validator':
+    w3 = Web3(HTTPProvider('http://localhost:8585'))
+else:
+    w3 = Web3(HTTPProvider("http://44.227.34.159:8008/rpc"))
+
 
 peer_gauge = prom.Gauge(
     'peer_count', 'Number of peers in the Ethereum network')
@@ -21,7 +28,7 @@ latest_block = prom.Gauge(
 node_sync_gauge = prom.Gauge(
     'syncing', 'Node Syncing Status'
 )
-blocks_to_syn_gauge = prom.gauge(
+blocks_to_syn_gauge = prom.Gauge(
     'blocks_to_sync', 'Blocks node needs to catch up')
 
 bor_status_gauge = prom.Gauge(
@@ -96,8 +103,10 @@ schedule.every(15).seconds.do(check_syncing)
 schedule.every(15).seconds.do(current_head)
 schedule.every(15).seconds.do(netVersion)
 
-# schedule.every(15).seconds.do(check_service("bor"))
-# schedule.every(15).seconds.do(check_service("heimdall"))
+if env == 'validator':
+    schedule.every(15).seconds.do(check_service("bor"))
+    schedule.every(15).seconds.do(check_service("heimdall"))
+
 
 if __name__ == '__main__':
     start_http_server(3000)

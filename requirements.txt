@@ -1,61 +1,6 @@
-aiohttp @ file:///Users/runner/miniforge3/conda-bld/aiohttp_1686375944694/work
-aiosignal @ file:///home/conda/feedstock_root/build_artifacts/aiosignal_1667935791922/work
-async-timeout @ file:///home/conda/feedstock_root/build_artifacts/async-timeout_1640026696943/work
-attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1683424013410/work
-bitarray @ file:///Users/runner/miniforge3/conda-bld/bitarray_1686438972851/work
-boltons @ file:///home/conda/feedstock_root/build_artifacts/boltons_1677499911949/work
-brotlipy @ file:///Users/runner/miniforge3/conda-bld/brotlipy_1666764759924/work
-certifi==2023.5.7
-cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1671179893800/work
-charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1678108872112/work
-colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
-conda @ file:///Users/runner/miniforge3/conda-bld/conda_1685035324110/work
-conda-package-handling @ file:///home/conda/feedstock_root/build_artifacts/conda-package-handling_1669907009957/work
-conda_package_streaming @ file:///home/conda/feedstock_root/build_artifacts/conda-package-streaming_1669733752472/work
-cryptography @ file:///Users/runner/miniforge3/conda-bld/cryptography-split_1679811336455/work
-cytoolz @ file:///Users/runner/miniforge3/conda-bld/cytoolz_1666829789554/work
-eth-abi @ file:///home/conda/feedstock_root/build_artifacts/eth-abi_1686323409985/work
-eth-account @ file:///home/conda/feedstock_root/build_artifacts/eth-account_1682635474507/work
-eth-hash @ file:///home/conda/feedstock_root/build_artifacts/eth-hash_1686250537609/work
-eth-keyfile @ file:///home/conda/feedstock_root/build_artifacts/eth-keyfile_1677686073380/work
-eth-keys @ file:///home/conda/feedstock_root/build_artifacts/eth-keys_1678493914753/work
-eth-rlp @ file:///home/conda/feedstock_root/build_artifacts/eth-rlp_1643212579868/work
-eth-typing @ file:///home/conda/feedstock_root/build_artifacts/eth-typing_1686239464158/work
-eth-utils @ file:///Users/runner/miniforge3/conda-bld/eth-utils_1686324781128/work
-frozenlist @ file:///Users/runner/miniforge3/conda-bld/frozenlist_1667935502123/work
-hexbytes @ file:///home/conda/feedstock_root/build_artifacts/hexbytes_1686323307270/work
-idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
-importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1682176699712/work
-importlib-resources @ file:///home/conda/feedstock_root/build_artifacts/importlib_resources_1676919000169/work
-jsonpatch @ file:///home/conda/feedstock_root/build_artifacts/jsonpatch_1632759296524/work
-jsonpointer==2.0
-jsonschema @ file:///home/conda/feedstock_root/build_artifacts/jsonschema-meta_1669810440410/work
-lru-dict @ file:///Users/runner/miniforge3/conda-bld/lru-dict_1685281328584/work
-multidict @ file:///Users/runner/miniforge3/conda-bld/multidict_1672339514000/work
-packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1681337016113/work
-parsimonious @ file:///home/conda/feedstock_root/build_artifacts/parsimonious_1662507967392/work
-pkgutil_resolve_name @ file:///home/conda/feedstock_root/build_artifacts/pkgutil-resolve-name_1633981968097/work
-pluggy @ file:///home/conda/feedstock_root/build_artifacts/pluggy_1667232663820/work
-prometheus-client==0.17.0
-protobuf==4.23.2
-pycosat @ file:///Users/runner/miniforge3/conda-bld/pycosat_1666836623787/work
-pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
-pycryptodome @ file:///Users/runner/miniforge3/conda-bld/pycryptodome_1684532216461/work
-pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1680037383858/work
-pyrsistent @ file:///Users/runner/miniforge3/conda-bld/pyrsistent_1672681537313/work
-PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
-regex @ file:///Users/runner/miniforge3/conda-bld/regex_1685823644704/work
-requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1680286922386/work
-rlp @ file:///home/conda/feedstock_root/build_artifacts/rlp_1639254711263/work
-ruamel.yaml @ file:///Users/runner/miniforge3/conda-bld/ruamel.yaml_1678273098088/work
-ruamel.yaml.clib @ file:///Users/runner/miniforge3/conda-bld/ruamel.yaml.clib_1670412881259/work
+prometheus_client==0.17.0
 schedule==1.2.0
-toolz @ file:///home/conda/feedstock_root/build_artifacts/toolz_1657485559105/work
-tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1677948868469/work
-typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1685704949284/work
-urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1678635778344/work
-web3 @ file:///Users/runner/miniforge3/conda-bld/web3_1685657252793/work
-websockets @ file:///Users/runner/miniforge3/conda-bld/websockets_1683550497847/work
-yarl @ file:///Users/runner/miniforge3/conda-bld/yarl_1685191847849/work
-zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1677313463193/work
-zstandard==0.19.0
+web3==6.4.0
+aiohttp==3.8.3
+yarl==1.8.1
+frozenlist==1.3.1

@@ -117,11 +117,10 @@ gauges = {}
 
 
 def check_service(service):
+    service_name = service.replace('-', '_')
     if service not in gauges:
-
-        service_name = service.replace('-', '_')
         gauges[service] = prom.Gauge(
-            f'{service_name}', f'{service_name} status')
+            f'{service_name}', f'{service_name} status', ['service_name'])
 
     try:
         output = subprocess.check_output(
@@ -129,11 +128,11 @@ def check_service(service):
             universal_newlines=True
         )
         if output.strip() == "active":
-            gauges[service].labels(service_name=service).set(1)
+            gauges[service].labels(service_name=service_name).set(1)
         else:
-            gauges[service].labels(service_name=service).set(0)
+            gauges[service].labels(service_name=service_name).set(0)
     except subprocess.CalledProcessError:
-        gauges[service].labels(service_name=service).set(0)
+        gauges[service].labels(service_name=service_name).set(0)
 
 
 schedule.every(15).seconds.do(peerCount)

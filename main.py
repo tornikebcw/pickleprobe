@@ -113,6 +113,9 @@ def netListening():
         print("Error:", err)
 
 
+gauges = {}
+
+
 def check_service(service):
     if service not in gauges:
         gauges[service] = Gauge(

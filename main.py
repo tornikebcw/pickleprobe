@@ -38,6 +38,8 @@ heimdall_status_gauge = prom.Gauge(
 
 netinfo = prom.Gauge(
     'network_name', 'network-name')
+netListening_gauge = prom.Gauge(
+    'net_listening', 'true if client is actively listening for network connections')
 
 
 def check_syncing():
@@ -50,6 +52,7 @@ def check_syncing():
         else:
             print("Node is synced")
             node_sync_gauge.set(1)
+            blocks_to_syn_gauge.set(0)
     except Exception as err:
         print("An error occurred:", err)
 
@@ -84,6 +87,18 @@ def netVersion():
         print("Bad Shit went down:", err)
 
 
+def netListening():
+    try:
+        netstatus = w3.net.listening
+
+        if netstatus == 'true':
+            netListening_gauge.set(1)
+        else:
+            netListening_gauge.set(0)
+    except Exception as err:
+        print("Error:", err)
+
+
 def check_service(service):
     try:
         output = subprocess.check_output(
@@ -102,6 +117,8 @@ schedule.every(15).seconds.do(peerCount)
 schedule.every(15).seconds.do(check_syncing)
 schedule.every(15).seconds.do(current_head)
 schedule.every(15).seconds.do(netVersion)
+schedule.every(15).seconds.do(netListening)
+
 
 if env == 'validator':
     schedule.every(15).seconds.do(check_service("bor"))

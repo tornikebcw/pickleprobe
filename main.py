@@ -110,7 +110,7 @@ def netVersion():
 def netListening():
     try:
         netstatus = w3.net.listening
-        if netstatus == 'True':
+        if netstatus == True:
             log.info("Net listening: True")
             netListening_gauge.set(1)
         else:

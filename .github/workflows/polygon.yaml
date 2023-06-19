@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    container: dcoker:23.0.6-dind
+    # container: dcoker:23.0.6-dind
     steps:
     - name: Checkout code
       uses: actions/checkout@v3

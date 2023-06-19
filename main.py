@@ -88,9 +88,9 @@ def peerCount():
     try:
         count = w3.net.peer_count
         peer_gauge.set(count)
-        log.info("Peers:", count)
+        log.info(f"Peers: {count}")
     except Exception as err:
-        log.error("Bad Shit went down:", err)
+        log.error(f"Bad Shit went down: {err}")
 
 
 def netVersion():

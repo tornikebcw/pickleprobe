@@ -7,10 +7,9 @@ import time
 import schedule
 import os
 import logging
-# from systemd.journal import JournalHandler
 
 # Logging part
-log = logging.getLogger('my_logger')
+log = logging.getLogger('pickleLogger')
 log.info(os.uname()[1])
 stream_handler = logging.StreamHandler()
 log.addHandler(stream_handler)
@@ -30,6 +29,8 @@ env = config['default'].get('env')
 client = config['default'].get('client')
 rpcaddress = config['default'].get('rpcaddress')
 
+if env == "prod":
+    from systemd.journal import JournalHandler
 
 # Conditionals for env and RPC addresses
 if env == 'dev':

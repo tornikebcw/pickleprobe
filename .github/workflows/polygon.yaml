@@ -6,6 +6,10 @@ on:
       - "*"
   workflow_dispatch:
     
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: tornikebcw/pickleprobe
+
 
 jobs:
   build:
@@ -18,7 +22,7 @@ jobs:
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v2
       with:
-        registry: ghcr.io
+        registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_TOKEN }}
   
@@ -27,4 +31,6 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/${{ env.IMAGE_NAME }}:latest
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:polygon
+        build-args: |
+          client=polygon

@@ -13,12 +13,18 @@ prom.REGISTRY.unregister(prom.PLATFORM_COLLECTOR)
 prom.REGISTRY.unregister(prom.GC_COLLECTOR)
 
 env = os.getenv('env')
+client = os.getenv('client')
+rpcAddress = os.getenv('rpcaddress')
 
-
-if env == 'validator':
-    w3 = Web3(HTTPProvider('http://localhost:8585'))
+if env == 'dev':
+    w3 = Web3(HTTPProvider('http://44.227.34.159:8008/rpc'))
+    print("Env set to local, RPC is pointed to Dev Server")
+elif not env:
+    w3 = Web3(HTTPProvider('http://localhost:8545'))
+    print("Env not set , Using default RPC Address")
 else:
-    w3 = Web3(HTTPProvider("http://44.227.34.159:8008/rpc"))
+    w3 = Web3(HTTPProvider('rpcAddress'))
+    print("RPC is pointed to:", rpcAddress)
 
 
 peer_gauge = prom.Gauge(
@@ -119,11 +125,15 @@ schedule.every(15).seconds.do(current_head)
 schedule.every(15).seconds.do(netVersion)
 schedule.every(15).seconds.do(netListening)
 
-
-if env == 'validator':
+if client == 'polygon':
     schedule.every(15).seconds.do(check_service("bor"))
     schedule.every(15).seconds.do(check_service("heimdall"))
-
+if client == 'eth2':
+    schedule.every(15).seconds.do(check_service("eth2-geth"))
+    schedule.every(15).seconds.do(check_service("eth2-beaconchain"))
+    schedule.every(15).seconds.do(check_service("eth2-validator"))
+else:
+    print("Name for Go Client was not provided skipping service status check")
 
 if __name__ == '__main__':
     start_http_server(3000)

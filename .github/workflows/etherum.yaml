@@ -1,0 +1,36 @@
+name: app-etherum
+
+on: 
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+    
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: tornikebcw/pickleprobe
+
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    # container: dcoker:23.0.6-dind
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_TOKEN }}
+  
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:etherum
+        build-args: |
+          client=eth2

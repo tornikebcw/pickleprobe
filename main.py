@@ -8,12 +8,31 @@ import schedule
 import os
 import logging
 
-# Logging part
+config = toml.load('config.toml')
+
+# Assign the variables
+env = config['default'].get('env')
+client = config['default'].get('client')
+rpcaddress = config['default'].get('rpcaddress')
 log = logging.getLogger('pickleLogger')
-log.info(os.uname()[1])
+
+if env == "prod":
+    from systemd.journal import JournalHandler
+    log.addHandler(JournalHandler())
+
 stream_handler = logging.StreamHandler()
 log.addHandler(stream_handler)
 log.setLevel(logging.INFO)
+log.info(os.uname()[1])
+
+# Conditionals for env and RPC addresses
+if rpcaddress:
+    w3 = Web3(HTTPProvider(rpcaddress))
+    log.info(f"RPC is pointed to: {rpcaddress}")
+else:
+    w3 = Web3(HTTPProvider('http://localhost:8545'))
+    log.info("Custom RPC not provided, Using default RPC Address")
+
 
 # Drop unncesseary python process monitoring
 prom.REGISTRY.unregister(prom.PROCESS_COLLECTOR)
@@ -22,25 +41,6 @@ prom.REGISTRY.unregister(prom.GC_COLLECTOR)
 
 
 # Load the config.toml file
-config = toml.load('config.toml')
-
-# Assign the variables
-env = config['default'].get('env')
-client = config['default'].get('client')
-rpcaddress = config['default'].get('rpcaddress')
-
-if env == "prod":
-    from systemd.journal import JournalHandler
-    log.addHandler(JournalHandler())
-
-
-# Conditionals for env and RPC addresses
-if env == 'prod' and rpcaddress:
-    w3 = Web3(HTTPProvider(rpcaddress))
-    log.info(f"RPC is pointed to: {rpcaddress}")
-else:
-    w3 = Web3(HTTPProvider('http://localhost:8545'))
-    log.info("Env not set , Using default RPC Address")
 
 
 # Setting up specific gauges to GethCalls

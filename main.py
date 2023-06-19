@@ -72,16 +72,16 @@ def check_syncing():
             node_sync_gauge.set(1)
             blocks_to_syn_gauge.set(0)
     except Exception as err:
-        log.error("An error occurred:", err)
+        log.error(f"An error occurred: {err}")
 
 
 def current_head():
     try:
         head = w3.eth.block_number
         latest_block.set(int(head))
-        log.info("latest block number:", head)
+        log.info(f"Latest block number: {head}")
     except Exception as err:
-        log.error("Bad Shit went down:", err)
+        log.error(f"Bad Shit went down: {err}")
 
 
 def peerCount():
@@ -99,21 +99,21 @@ def netVersion():
         if version:
             netinfo.set(version)
         else:
-            log.info("Network_version::", version)
+            log.info(f"Network version: {version}")
     except Exception as err:
-        log.error("Bad Shit went down:", err)
+        log.error(f"Bad Shit went down: {err}")
 
 
 def netListening():
     try:
         netstatus = w3.net.listening
         if netstatus == 'True':
-            log.info("Net_listening: True")
+            log.info("Net listening: True")
             netListening_gauge.set(1)
         else:
             netListening_gauge.set(0)
     except Exception as err:
-        log.error("Error:", err)
+        log.error(f"Error: {err}")
 
 
 gauges = {}

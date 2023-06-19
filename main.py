@@ -6,16 +6,23 @@ import subprocess
 import time
 import schedule
 import os
+import logging
+# from systemd.journal import JournalHandler
 
+# Logging part
+log = logging.getLogger('my_logger')
+log.info(os.uname()[1])
+stream_handler = logging.StreamHandler()
+log.addHandler(stream_handler)
+log.setLevel(logging.INFO)
 
-print(os.uname()[1])
-
+# Drop unncesseary python process monitoring
 prom.REGISTRY.unregister(prom.PROCESS_COLLECTOR)
 prom.REGISTRY.unregister(prom.PLATFORM_COLLECTOR)
 prom.REGISTRY.unregister(prom.GC_COLLECTOR)
 
 
-# Load the config file
+# Load the config.toml file
 config = toml.load('config.toml')
 
 # Assign the variables
@@ -24,17 +31,18 @@ client = config['default'].get('client')
 rpcaddress = config['default'].get('rpcaddress')
 
 
+# Conditionals for env and RPC addresses
 if env == 'dev':
     w3 = Web3(HTTPProvider('http://44.227.34.159:8008/rpc'))
-    print("Env set to local, RPC is pointed to Dev Server")
+    log.info("Env set to local, RPC is pointed to Dev Server")
 elif not env:
     w3 = Web3(HTTPProvider('http://localhost:8545'))
-    print("Env not set , Using default RPC Address")
+    log.info("Env not set , Using default RPC Address")
 else:
     w3 = Web3(HTTPProvider('rpcAddress'))
-    print("RPC is pointed to:", rpcAddress)
+    log.info("RPC is pointed to:", rpcAddress)
 
-
+# Setting up specific gauges to GethCalls
 peer_gauge = prom.Gauge(
     'peer_count', 'Number of peers in the Ethereum network')
 latest_block = prom.Gauge(
@@ -59,53 +67,52 @@ def check_syncing():
             blocks_to_syn_gauge.set(
                 syncing['highestBlock'] - syncing['currentBlock'])
         else:
-            print("Node is synced")
+            log.info("Node is synced")
             node_sync_gauge.set(1)
             blocks_to_syn_gauge.set(0)
     except Exception as err:
-        print("An error occurred:", err)
+        log.error("An error occurred:", err)
 
 
 def current_head():
     try:
         head = w3.eth.block_number
         latest_block.set(int(head))
-        print("latest block number:", head)
+        log.info("latest block number:", head)
     except Exception as err:
-        print("Bad Shit went down:", err)
+        log.error("Bad Shit went down:", err)
 
 
 def peerCount():
     try:
         count = w3.net.peer_count
         peer_gauge.set(count)
-        print("Peers:", count)
+        log.info("Peers:", count)
     except Exception as err:
-        print("Bad Shit went down:", err)
+        log.error("Bad Shit went down:", err)
 
 
 def netVersion():
     try:
         version = w3.net.version
-        if version == "137":
-            print("Polygon-Mainnet")
+        if version:
             netinfo.set(version)
         else:
-            print(version)
+            log.info("Network_version::", version)
     except Exception as err:
-        print("Bad Shit went down:", err)
+        log.error("Bad Shit went down:", err)
 
 
 def netListening():
     try:
         netstatus = w3.net.listening
-
-        if netstatus == 'true':
+        if netstatus == 'True':
+            log.info("Net_listening: True")
             netListening_gauge.set(1)
         else:
             netListening_gauge.set(0)
     except Exception as err:
-        print("Error:", err)
+        log.error("Error:", err)
 
 
 gauges = {}
@@ -148,11 +155,11 @@ if client == 'eth2':
         schedule.every(15).seconds.do(
             lambda servicename=servicename: check_service(servicename))
 else:
-    print("Name for Go Client was not provided skipping service status check")
+    log.info("Name for Go Client was not provided skipping service status check")
 
 if __name__ == '__main__':
     start_http_server(3000)
-    print("Metrics Server Has started on http://localhost:3000 ")
+    log.info("Metrics Server Has started on http://localhost:3000 ")
     while True:
         schedule.run_pending()
         time.sleep(1)

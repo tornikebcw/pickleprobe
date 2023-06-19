@@ -145,9 +145,11 @@ if client == 'polygon':
     schedule.every(15).seconds.do(check_service("bor"))
     schedule.every(15).seconds.do(check_service("heimdall"))
 if client == 'eth2':
-    schedule.every(15).seconds.do(check_service("eth2-geth"))
-    schedule.every(15).seconds.do(check_service("eth2-beaconchain"))
-    schedule.every(15).seconds.do(check_service("eth2-validator"))
+    schedule.every(15).seconds.do(lambda: check_service("eth2-geth"))
+
+    # schedule.every(15).seconds.do(check_service("eth2-geth"))
+    # schedule.every(15).seconds.do(check_service("eth2-beaconchain"))
+    # schedule.every(15).seconds.do(check_service("eth2-validator"))
 else:
     print("Name for Go Client was not provided skipping service status check")
 

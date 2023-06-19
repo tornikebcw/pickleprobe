@@ -45,10 +45,10 @@ node_sync_gauge = prom.Gauge(
 blocks_to_syn_gauge = prom.Gauge(
     'blocks_to_sync', 'Blocks node needs to catch up')
 
-bor_status_gauge = prom.Gauge(
-    '{}_status'.format('bor'), 'Status of the Service', ['service_name'])
-heimdall_status_gauge = prom.Gauge(
-    '{}_status'.format('heimdall'), 'Status of the Service', ['service_name'])
+# bor_status_gauge = prom.Gauge(
+#     '{}_status'.format('bor'), 'Status of the Service', ['service_name'])
+# heimdall_status_gauge = prom.Gauge(
+#     '{}_status'.format('heimdall'), 'Status of the Service', ['service_name'])
 
 netinfo = prom.Gauge(
     'network_name', 'network-name')
@@ -118,8 +118,10 @@ gauges = {}
 
 def check_service(service):
     if service not in gauges:
+
+        service_name = service.replace('-', '_')
         gauges[service] = prom.Gauge(
-            f'{service}', f'{service} status')
+            f'{service_name}', f'{service_name} status')
 
     try:
         output = subprocess.check_output(

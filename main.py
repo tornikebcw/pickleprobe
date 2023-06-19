@@ -120,11 +120,11 @@ def check_service(service):
             universal_newlines=True
         )
         if output.strip() == "active":
-            service_status_gauge.labels(service_name=service).set(1)
+            (f'{service}_status_gauge').labels(service_name=service).set(1)
         else:
-            service_status_gauge.labels(service_name=service).set(0)
+            (f'{service}_status_gauge').labels(service_name=service).set(0)
     except subprocess.CalledProcessError:
-        service_status_gauge.labels(service_name=service).set(0)
+        (f'{service}_status_gauge').labels(service_name=service).set(0)
 
 
 schedule.every(15).seconds.do(peerCount)

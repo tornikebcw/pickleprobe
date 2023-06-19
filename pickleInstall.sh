@@ -8,7 +8,7 @@ fi
 
 # Download and extract the repository
 cd /var
-git clone https://github.com/username/pickleprobe.git
+git clone https://github.com/tornikebcw/pickleprobe.git
 cd pickleprobe
 
 # Check if Python is installed
@@ -31,10 +31,7 @@ else
 fi
 
 # Create a virtual environment and install requirements.txt
-python3 -m venv .venv
-source .venv/bin/activate
 pip install -r requirements.txt
-deactivate
 
 # Create systemd service file
 cat > /etc/systemd/system/pickleprobe.service <<EOF

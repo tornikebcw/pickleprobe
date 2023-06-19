@@ -19,9 +19,10 @@ log = logging.getLogger('pickleLogger')
 if env == "prod":
     from systemd.journal import JournalHandler
     log.addHandler(JournalHandler())
+else:
+    stream_handler = logging.StreamHandler()
+    log.addHandler(stream_handler)
 
-stream_handler = logging.StreamHandler()
-log.addHandler(stream_handler)
 log.setLevel(logging.INFO)
 log.info(os.uname()[1])
 

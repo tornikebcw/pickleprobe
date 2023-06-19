@@ -28,7 +28,7 @@ log.info(os.uname()[1])
 # Conditionals for env and RPC addresses
 if rpcaddress:
     w3 = Web3(HTTPProvider(rpcaddress))
-    log.info(f"RPC is pointed to: {rpcaddress}")
+    log.info("RPC is pointed to: %s", rpcaddress)
 else:
     w3 = Web3(HTTPProvider('http://localhost:8545'))
     log.info("Custom RPC not provided, Using default RPC Address")

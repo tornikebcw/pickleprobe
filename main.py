@@ -119,7 +119,7 @@ gauges = {}
 def check_service(service):
     if service not in gauges:
         gauges[service] = prom.Gauge(
-            f'{service}_status_gauge', f'{service} status')
+            f'{service}', f'{service} status')
 
     try:
         output = subprocess.check_output(

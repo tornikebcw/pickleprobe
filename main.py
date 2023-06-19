@@ -114,17 +114,21 @@ def netListening():
 
 
 def check_service(service):
+    if service not in gauges:
+        gauges[service] = Gauge(
+            f'{service}_status_gauge', f'{service} status')
+
     try:
         output = subprocess.check_output(
             ["systemctl", "is-active", service],
             universal_newlines=True
         )
         if output.strip() == "active":
-            (f'{service}_status_gauge').labels(service_name=service).set(1)
+            gauges[service].labels(service_name=service).set(1)
         else:
-            (f'{service}_status_gauge').labels(service_name=service).set(0)
+            gauges[service].labels(service_name=service).set(0)
     except subprocess.CalledProcessError:
-        (f'{service}_status_gauge').labels(service_name=service).set(0)
+        gauges[service].labels(service_name=service).set(0)
 
 
 schedule.every(15).seconds.do(peerCount)

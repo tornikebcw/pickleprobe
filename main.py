@@ -1,3 +1,4 @@
+import toml
 from web3 import Web3, HTTPProvider
 import prometheus_client as prom
 from prometheus_client import start_http_server
@@ -6,15 +7,22 @@ import time
 import schedule
 import os
 
+
 print(os.uname()[1])
 
 prom.REGISTRY.unregister(prom.PROCESS_COLLECTOR)
 prom.REGISTRY.unregister(prom.PLATFORM_COLLECTOR)
 prom.REGISTRY.unregister(prom.GC_COLLECTOR)
 
-env = os.getenv('env')
-client = os.getenv('client')
-rpcAddress = os.getenv('rpcaddress')
+
+# Load the config file
+config = toml.load('config.toml')
+
+# Assign the variables
+env = config['default'].get('env')
+client = config['default'].get('client')
+rpcaddress = config['default'].get('rpcaddress')
+
 
 if env == 'dev':
     w3 = Web3(HTTPProvider('http://44.227.34.159:8008/rpc'))

@@ -45,11 +45,6 @@ node_sync_gauge = prom.Gauge(
 blocks_to_syn_gauge = prom.Gauge(
     'blocks_to_sync', 'Blocks node needs to catch up')
 
-# bor_status_gauge = prom.Gauge(
-#     '{}_status'.format('bor'), 'Status of the Service', ['service_name'])
-# heimdall_status_gauge = prom.Gauge(
-#     '{}_status'.format('heimdall'), 'Status of the Service', ['service_name'])
-
 netinfo = prom.Gauge(
     'network_name', 'network-name')
 netListening_gauge = prom.Gauge(
@@ -135,21 +130,23 @@ def check_service(service):
         gauges[service].labels(service_name=service_name).set(0)
 
 
-schedule.every(15).seconds.do(peerCount)
-schedule.every(15).seconds.do(check_syncing)
-schedule.every(15).seconds.do(current_head)
-schedule.every(15).seconds.do(netVersion)
-schedule.every(15).seconds.do(netListening)
+functions_to_schedule = [peerCount, check_syncing,
+                         current_head, netVersion, netListening]
+for function in functions_to_schedule:
+    schedule.every(15).seconds.do(function)
+
 
 if client == 'polygon':
-    schedule.every(15).seconds.do(check_service("bor"))
-    schedule.every(15).seconds.do(check_service("heimdall"))
+    servicenames = ['bor', 'heimdalld']
+    for servicename in servicenames:
+        schedule.every(15).seconds.do(
+            lambda servicename=servicename: check_service(servicename))
 if client == 'eth2':
-    schedule.every(15).seconds.do(lambda: check_service("eth2-geth"))
-
-    # schedule.every(15).seconds.do(check_service("eth2-geth"))
-    # schedule.every(15).seconds.do(check_service("eth2-beaconchain"))
-    # schedule.every(15).seconds.do(check_service("eth2-validator"))
+    servicenames = ['eth2-geth', 'eth2-beaconchain',
+                    'eth2-validator']
+    for servicename in servicenames:
+        schedule.every(15).seconds.do(
+            lambda servicename=servicename: check_service(servicename))
 else:
     print("Name for Go Client was not provided skipping service status check")
 

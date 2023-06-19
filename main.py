@@ -31,17 +31,17 @@ rpcaddress = config['default'].get('rpcaddress')
 
 if env == "prod":
     from systemd.journal import JournalHandler
+    log.addHandler(JournalHandler())
+
 
 # Conditionals for env and RPC addresses
-if env == 'dev':
-    w3 = Web3(HTTPProvider('http://44.227.34.159:8008/rpc'))
-    log.info("Env set to local, RPC is pointed to Dev Server")
-elif not env:
+if env == 'prod' and rpcaddress:
+    w3 = Web3(HTTPProvider(rpcaddress))
+    log.info(f"RPC is pointed to: {rpcaddress}")
+else:
     w3 = Web3(HTTPProvider('http://localhost:8545'))
     log.info("Env not set , Using default RPC Address")
-else:
-    w3 = Web3(HTTPProvider('rpcAddress'))
-    log.info("RPC is pointed to:", rpcAddress)
+
 
 # Setting up specific gauges to GethCalls
 peer_gauge = prom.Gauge(

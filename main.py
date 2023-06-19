@@ -118,7 +118,7 @@ gauges = {}
 
 def check_service(service):
     if service not in gauges:
-        gauges[service] = Gauge(
+        gauges[service] = prom.Gauge(
             f'{service}_status_gauge', f'{service} status')
 
     try:

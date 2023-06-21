@@ -40,7 +40,7 @@ Description=PickleProbe Service
 After=network.target
 
 [Service]
-ExecStart=/var/pickleprobe/.venv/bin/python3 /var/lib/pickleprobe/main.py
+ExecStart=/usr/bin/python3 /var/lib/pickleprobe/main.py
 WorkingDirectory=/var/pickleprobe
 User=root
 Group=root

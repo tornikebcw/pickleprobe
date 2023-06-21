@@ -55,5 +55,4 @@ EOF
 
 # Reload systemd daemon
 systemctl daemon-reload
-systemctl enable pickleprobe
-systemctl start pickleprobe
+# systemctl enable pickleprobe

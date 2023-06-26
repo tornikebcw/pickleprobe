@@ -158,6 +158,12 @@ if client == 'eth2':
     for servicename in servicenames:
         schedule.every(15).seconds.do(
             lambda servicename=servicename: check_service(servicename))
+if client == 'opera':
+    servicenames = ['opera']
+    for servicename in servicenames:
+        schedule.every(15).seconds.do(
+            lambda servicename=servicename: check_service(servicename))
+
 else:
     log.info("Name for Go Client was not provided skipping service status check")
 

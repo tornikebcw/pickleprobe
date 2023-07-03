@@ -5,8 +5,8 @@ from prometheus_client import start_http_server
 import subprocess
 import time
 import schedule
-import os
-import logging
+import logger as log
+import containers as c
 
 config = toml.load('config.toml')
 
@@ -14,19 +14,7 @@ config = toml.load('config.toml')
 env = config['default'].get('env')
 client = config['default'].get('client')
 rpcaddress = config['default'].get('rpcaddress')
-log = logging.getLogger('pickleLogger')
 
-if env == "prod":
-    from systemd.journal import JournalHandler
-    journald_handler = JournalHandler(SYSLOG_IDENTIFIER='pickleprobe')
-    log.addHandler(journald_handler)
-    log.setLevel(logging.INFO)
-else:
-    stream_handler = logging.StreamHandler()
-    log.addHandler(stream_handler)
-
-log.setLevel(logging.INFO)
-log.info(os.uname()[1])
 
 # Conditionals for env and RPC addresses
 if rpcaddress:
@@ -168,6 +156,14 @@ if client == 'avalanche':
     for servicename in servicenames:
         schedule.every(15).seconds.do(
             lambda servicename=servicename: check_service(servicename))
+if client == 'optimism':
+    servicename == "l2geth"
+    schedule.every(15).seconds.do(
+        lambda container_name=servicename: check_service(container_name))
+if client == 'arbitrum':
+    servicename == "l2geth"
+    schedule.every(15).seconds.do(
+        lambda container_name=servicename: check_service(container_name))
 
 
 else:

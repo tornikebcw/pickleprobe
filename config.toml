@@ -2,6 +2,7 @@
 ###leave this blank if you dont need 
 #env = ""
 ###Acceptable options are polygon and eth2
-#client = "eth2"
+client = "optimism"
 ###leave this blank if RPC is exposed on http://localhost:8545
 #rpcaddress = 
+container = true

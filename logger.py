@@ -1,5 +1,9 @@
 import os
 import logging
+import toml
+
+config = toml.load('config.toml')
+env = config['default'].get('env')
 
 log = logging.getLogger('pickleLogger')
 

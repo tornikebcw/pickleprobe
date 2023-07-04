@@ -6,3 +6,4 @@ client = "optimism"
 ###leave this blank if RPC is exposed on http://localhost:8545
 #rpcaddress = 
 container = true
+containerName = ""

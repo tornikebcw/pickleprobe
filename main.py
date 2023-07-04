@@ -112,29 +112,29 @@ def netListening():
 gauges = {}
 
 
-# def check_service(service):
-#     service_name = service.replace('-', '_')
-#     if service not in gauges:
-#         gauges[service] = prom.Gauge(
-#             f'{service_name}', f'{service_name} status', ['service_name'])
+def check_service(service):
+    service_name = service.replace('-', '_')
+    if service not in gauges:
+        gauges[service] = prom.Gauge(
+            f'{service_name}', f'{service_name} status', ['service_name'])
 
-#     try:
-#         output = subprocess.check_output(
-#             ["systemctl", "is-active", service],
-#             universal_newlines=True
-#         )
-#         if output.strip() == "active":
-#             gauges[service].labels(service_name=service_name).set(1)
-#         else:
-#             gauges[service].labels(service_name=service_name).set(0)
-#     except subprocess.CalledProcessError:
-#         gauges[service].labels(service_name=service_name).set(0)
+    try:
+        output = subprocess.check_output(
+            ["systemctl", "is-active", service],
+            universal_newlines=True
+        )
+        if output.strip() == "active":
+            gauges[service].labels(service_name=service_name).set(1)
+        else:
+            gauges[service].labels(service_name=service_name).set(0)
+    except subprocess.CalledProcessError:
+        gauges[service].labels(service_name=service_name).set(0)
 
 
-# functions_to_schedule = [peerCount, check_syncing,
-#                          current_head, netVersion, netListening]
-# for function in functions_to_schedule:
-#     schedule.every(15).seconds.do(function)
+functions_to_schedule = [peerCount, check_syncing,
+                         current_head, netVersion, netListening]
+for function in functions_to_schedule:
+    schedule.every(15).seconds.do(function)
 
 
 def is_container_running(container_name: str):

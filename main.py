@@ -165,7 +165,8 @@ clients_services = {
     'polygon': ['bor', 'heimdalld'],
     'eth2': ['eth2-geth', 'eth2-beaconchain', 'eth2-validator'],
     'opera': ['opera'],
-    'avalanche': ['avalanchego']
+    'avalanche': ['avalanchego'],
+    'cro': ['chain-maind']
 }
 
 container_services = {

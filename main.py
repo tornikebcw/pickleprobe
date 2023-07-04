@@ -169,7 +169,8 @@ clients_services = {
 }
 
 container_services = {
-    'optimism': ['optimism']
+    'optimism': ['optimism-op-geth'],
+    'arbitrum': ['arbitrum-nitro']
 }
 
 # Check if client name is provided

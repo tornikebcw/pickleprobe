@@ -116,7 +116,7 @@ def check_service(service):
     service_name = service.replace('-', '_')
     if service not in gauges:
         gauges[service] = prom.Gauge(
-            f'{service_name}', f'{service_name} status', ['service_name'])
+            service_status, f'{service_name} status', ['service_name'])
 
     try:
         output = subprocess.check_output(
@@ -166,6 +166,7 @@ clients_services = {
     'eth2': ['eth2-geth', 'eth2-beaconchain', 'eth2-validator'],
     'opera': ['opera'],
     'avalanche': ['avalanchego'],
+    'shyft': ['nethermind'],
     'cro': ['chain-maind']
 }
 
@@ -175,7 +176,7 @@ container_services = {
 }
 
 # Check if client name is provided
-if client:
+if client and env:
     servicenames = clients_services.get(client, [])
 
     if not servicenames:

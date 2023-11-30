@@ -3,5 +3,3 @@
 client = "eth2"
 ###leave this blank if RPC is exposed on http://localhost:8545
 rpcaddress = "https://eth.llamarpc.com"
-#container = true
-#containerName = ""

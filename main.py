@@ -6,17 +6,12 @@ import subprocess
 import time
 import schedule
 from logger import log
-import docker
-from docker import errors
-
 config = toml.load('config.toml')
 
 # Assign the variables
-env = config['default'].get('env')
-# client = config['default'].get('client')
+# env = config['default'].get('env')
 client = config.get('default', {}).get('client')
 rpcaddress = config['default'].get('rpcaddress')
-container = config['default'].get('container')
 
 
 # Conditionals for env and RPC addresses
@@ -112,92 +107,10 @@ def netListening():
 gauges = {}
 
 
-def check_service(service):
-    service_name = service.replace('-', '_')
-    if service not in gauges:
-        gauges[service] = prom.Gauge(
-            f'{service_name}_status', f'{service_name} status', ['service_name'])
-
-    try:
-        output = subprocess.check_output(
-            ["systemctl", "is-active", service],
-            universal_newlines=True
-        )
-        if output.strip() == "active":
-            gauges[service].labels(service_name=service_name).set(1)
-        else:
-            gauges[service].labels(service_name=service_name).set(0)
-    except subprocess.CalledProcessError:
-        gauges[service].labels(service_name=service_name).set(0)
-
-
 functions_to_schedule = [peerCount, check_syncing,
                          current_head, netVersion, netListening]
 for function in functions_to_schedule:
     schedule.every(15).seconds.do(function)
-
-
-def is_container_running(container_name: str):
-    RUNNING = "running"
-    docker_client = docker.from_env()
-    service_name = container_name.replace('-', '_')
-
-    # If the gauge for this service doesn't exist, create it
-    if container_name not in gauges:
-        gauges[container_name] = prom.Gauge(
-            f'{service_name}', f'{service_name} status', ['container_name'])
-
-    try:
-        container = docker_client.containers.get(container_name)
-        container_state = container.attrs["State"]
-
-        # If the container is running, set gauge to 1, else set to 0
-        if container_state["Status"] == RUNNING:
-            gauges[container_name].labels(container_name=service_name).set(1)
-        else:
-            gauges[container_name].labels(container_name=service_name).set(0)
-    except errors.NotFound as exc:
-        gauges[container_name].labels(container_name=service_name).set(0)
-        print(f"Check container name!\n{exc.explanation}")
-
-
-clients_services = {
-    'polygon': ['bor', 'heimdalld'],
-    'eth2': ['eth2-geth', 'eth2-beaconchain', 'eth2-validator'],
-    'opera': ['opera'],
-    'avalanche': ['avalanchego'],
-    'shyft': ['nethermind'],
-    'cro': ['chain-maind']
-}
-
-container_services = {
-    'optimism': ['optimism-op-geth'],
-    'arbitrum': ['arbitrum-nitro']
-}
-
-# Check if client name is provided
-if client and env:
-    servicenames = clients_services.get(client, [])
-
-    if not servicenames:
-        log.info(f"No services found for client: {client}")
-    else:
-        for servicename in servicenames:
-            schedule.every(15).seconds.do(
-                lambda servicename=servicename: check_service(servicename)
-            )
-else:
-    log.info("No client name provided Skipping service check.")
-
-
-if container == True:
-    containername = container_services.get(client, [])
-    for containername in container_services:
-        schedule.every(15).seconds.do(
-            lambda containername=containername: is_container_running(
-                containername)
-        )
-    log.info("found a container")
 
 
 if __name__ == '__main__':

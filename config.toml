@@ -1,5 +1,5 @@
 [default]
-###Acceptable options are polygon and eth2
-client = "eth2"
+#if node is evm compatioble set evm otherwise set solana
+client = "solana"
 ###leave this blank if RPC is exposed on http://localhost:8545
-rpcaddress = "https://eth.llamarpc.com"
+rpcaddress = "https://api.mainnet-beta.solana.com"
